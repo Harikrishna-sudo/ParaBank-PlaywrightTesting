@@ -12,7 +12,7 @@
     }
 
     async goto() {
-      await this.page.goto('https://parabank.parasoft.com/parabank/index.htm');
+      await this.page.goto(process.env.BASE_URL+'/index.htm');
     }
 
     async login(username, password) {

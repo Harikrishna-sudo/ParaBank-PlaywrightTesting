@@ -1,12 +1,13 @@
 const { test, expect } = require('../../fixtures/test-fixtures');
+const NavLinks = require("../../test-data/authenticated-routes");
 
 test.describe.serial('11 - Logout & Navigation Scenarios', () => {
-  test('TS-025: Verify navigation menu links (e.g., Home, About, Services) are visible and clickable', async ({ loginPage, navigationComponent, page }) => {
-    // TODO: Assignee implement TS-025
-    // 1. Navigate to home
-    // 2. Click About link -> verify About page
-    // 3. Click Services link -> verify Services page
-  });
+  for (const link of NavLinks) {
+    test(`TS-025: Verify navigation menu link ${link.path} is accessible`, async ({ page }) => {
+      await page.goto(process.env.BASE_URL + link.path);
+      expect(await page.title()).toContain(link.expectedTitle);
+    });
+  }
 
   test('TS-026: Log out of an active session and verify the user is returned to the login page', async ({ navigationComponent, page }) => {
     // TODO: Assignee implement TS-026

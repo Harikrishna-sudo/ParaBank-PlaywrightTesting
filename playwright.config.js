@@ -27,7 +27,7 @@ module.exports = defineConfig({
   use: {
     /* Base URL — set BASE_URL in .env or environment */
     baseURL: process.env.BASE_URL || 'https://parabank-17m8.onrender.com/parabank',
-
+    headless:false,
     /* Collect trace when retrying a failed test */
     trace: 'on-first-retry',
 
