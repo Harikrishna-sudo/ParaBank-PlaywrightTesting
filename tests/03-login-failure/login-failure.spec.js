@@ -31,3 +31,5 @@ test.describe.serial('03 - Login Failure Scenarios', () => {
 
       // 3. Verify error message is displayed
       expect(await loginPage.isErrorDisplayed()).toBe(true);
+  });
+});
