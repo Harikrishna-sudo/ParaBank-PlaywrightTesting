@@ -64,6 +64,30 @@ const testData = {
       downPayment: '10',
     },
   },
+   // Transfer Funds Module
+  transferFunds: {
+    validTransfer: {
+      amount: '100',
+      fromIndex: 0,
+      toIndex: 1,
+    },
+    overBalanceTransfer: {
+      amount: '9999999',
+      fromIndex: 0,
+      toIndex: 0,
+    },
+    zeroTransfer: {
+      amount: '0',
+      fromIndex: 0,
+      toIndex: 1,
+    },
+    negativeTransfer: {
+      amount: '-50',
+      fromIndex: 0,
+      toIndex: 1,
+    },
+  },
+
 };
 
 module.exports = { testData };
