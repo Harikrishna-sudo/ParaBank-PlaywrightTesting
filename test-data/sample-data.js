@@ -1,30 +1,28 @@
 /**
  * Centralized test data templates and sample fixtures.
+ * Assignees can add module-specific datasets here or create dedicated data files.
  *
- * Rule:
- * Never store real secrets/passwords here.
- * Use .env instead.
+ * Rule: Never store real secrets/passwords here. Use .env instead.
  */
 
 const testData = {
-
+  // Login Module
   login: {
     validUser: {
-      username: process.env.USERNAME || 'john',
-      password: process.env.PASSWORD || 'demo',
+      username: process.env.PARABANK_USERNAME || 'john',
+      password: process.env.PARABANK_PASSWORD || 'demo',
     },
-
     invalidUser: {
       username: 'nonexistent_user',
       password: 'wrongpassword',
     },
-
     emptyUser: {
       username: '',
       password: '',
     },
   },
 
+  // Registration Module
   registration: {
     sampleUser: {
       firstName: 'Jane',
@@ -40,6 +38,7 @@ const testData = {
     },
   },
 
+  // Bill Payment Module
   billPay: {
     samplePayee: {
       name: 'Electric Company',
@@ -51,23 +50,46 @@ const testData = {
       accountNumber: '12345',
       verifyAccount: '12345',
       amount: '50.00',
+      fromIndex: 0,
     },
   },
 
+  // Request Loan Module
   loan: {
     validLoan: {
       amount: '1000',
       downPayment: '100',
     },
-
     deniedLoan: {
       amount: '500000',
       downPayment: '10',
     },
   },
+   // Transfer Funds Module
+  transferFunds: {
+    validTransfer: {
+      amount: '100',
+      fromIndex: 0,
+      toIndex: 1,
+    },
+    overBalanceTransfer: {
+      amount: '9999999',
+      fromIndex: 0,
+      toIndex: 0,
+    },
+    zeroTransfer: {
+      amount: '0',
+      fromIndex: 0,
+      toIndex: 1,
+    },
+    negativeTransfer: {
+      amount: '-50',
+      fromIndex: 0,
+      toIndex: 1,
+    },
+  },
 
-  // Module 10 - Update Contact Info
-  updateContactInfo: {
+   updateContactInfo: {
     validProfile: {
       address: '123 New Street',
       city: 'Bangalore',
@@ -80,6 +102,7 @@ const testData = {
       phone: '9123456780',
     },
   },
+
 };
 
 module.exports = { testData };
