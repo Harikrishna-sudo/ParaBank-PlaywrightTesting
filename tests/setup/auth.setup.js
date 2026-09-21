@@ -26,7 +26,10 @@ setup('authenticate as valid user', async ({ page }) => {
   await loginPage.goto();
 
   // 2. Fill credentials from environment and submit
-  await loginPage.login(process.env.PARABANK_USERNAME, process.env.PASSWORD);
+  await loginPage.login(
+    process.env.PARABANK_USERNAME || 'john',
+    process.env.PARABANK_PASSWORD || 'demo',
+  );
 
   // 3. Assert login succeeded (Accounts Overview page)
   await page.waitForURL('**/overview.htm');

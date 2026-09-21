@@ -32,7 +32,7 @@ class BillPayPage {
 
   async goto() {
     // TODO: Navigate to bill payment page
-     await this.page.goto('/billpay.htm');
+     await this.page.goto('/parabank/billpay.htm');
     // Wait for the form to be ready before the test starts interacting
     await this.payeeName.waitFor({ state: 'visible' });
   }

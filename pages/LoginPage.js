@@ -1,4 +1,4 @@
- const BASE_URL = process.env.BASE_URL || 'https://parabank.parasoft.com/parabank';
+const BASE_URL = process.env.BASE_URL || 'https://parabank-17m8.onrender.com/parabank';
 
   class LoginPage {
     /**

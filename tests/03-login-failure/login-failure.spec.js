@@ -1,5 +1,5 @@
 
-● const { test, expect } = require('../../fixtures/test-fixtures');
+const { test, expect } = require('../../fixtures/test-fixtures');
 
   test.describe.serial('03 - Login Failure Scenarios', () => {
 

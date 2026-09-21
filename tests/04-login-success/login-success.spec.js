@@ -18,7 +18,7 @@
       // 3. Verify user lands on Accounts Overview page
       await expect(page).not.toHaveURL(/login\.htm/);
       await expect(page).toHaveURL(/overview\.htm/);
-      await expect(page.locator('h1')).toContainText('Accounts Overview');
+      await expect(page.getByRole('heading', { name: 'Accounts Overview' })).toBeVisible();
       console.log('[TS-006] Login successful - URL:', page.url());
     });
 

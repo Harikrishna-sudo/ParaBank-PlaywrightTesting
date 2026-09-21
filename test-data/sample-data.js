@@ -9,8 +9,8 @@ const testData = {
   // Login Module
   login: {
     validUser: {
-      username: process.env.USERNAME || 'john',
-      password: process.env.PASSWORD || 'demo',
+      username: process.env.PARABANK_USERNAME || 'john',
+      password: process.env.PARABANK_PASSWORD || 'demo',
     },
     invalidUser: {
       username: 'nonexistent_user',
