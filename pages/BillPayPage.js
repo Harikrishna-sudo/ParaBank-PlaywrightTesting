@@ -1,10 +1,15 @@
+'use strict';
+
+/**
+ * Page Object Model for the ParaBank Bill Pay page.
+ * BASE_URL is set in playwright.config.js via process.env.BASE_URL.
+ */
 class BillPayPage {
   /**
    * @param {import('@playwright/test').Page} page
    */
   constructor(page) {
     this.page = page;
-    // TODO: Define locators for Bill Payment page
     this.payeeName     = page.locator('[name="payee.name"]');
     this.payeeStreet   = page.locator('[name="payee.address.street"]');
     this.payeeCity     = page.locator('[name="payee.address.city"]');
@@ -21,25 +26,45 @@ class BillPayPage {
 
     // ── Success result locators ──────────────────────────────────────────────
     this.successHeading = page.locator('#billpayResult h1.title');
-    this.successResult  = page.locator('#billpayResult p');
+    this.successResult  = page.locator('#billpayResult p').first();
 
     // ── Validation error locators ────────────────────────────────────────────
-    this.errorName    = page.locator('#validationModel-name');
-    this.errorAddress = page.locator('#validationModel-address');
-    this.errorCity    = page.locator('#validationModel-city');
-    this.errorAmount  = page.locator('#validationModel-amount');
+    this.errorName          = page.locator('#validationModel-name');
+    this.errorAddress       = page.locator('#validationModel-address');
+    this.errorCity          = page.locator('#validationModel-city');
+    this.errorAmountEmpty   = page.locator('#validationModel-amount-empty');
+    this.errorAmountInvalid = page.locator('#validationModel-amount-invalid');
   }
 
+  /**
+   * Navigate to the Bill Pay page.
+   * The session is already active (injected via storageState by the
+   * 'authenticated' project in playwright.config.js).
+   */
   async goto() {
-    // TODO: Navigate to bill payment page
-     await this.page.goto('/parabank/billpay.htm');
+    const baseURL = process.env.BASE_URL || 'https://parabank-17m8.onrender.com/parabank';
+    await this.page.goto(`${baseURL}/billpay.htm`);
     // Wait for the form to be ready before the test starts interacting
     await this.payeeName.waitFor({ state: 'visible' });
   }
-  
 
+  /**
+   * Fill the Bill Pay form and click Send Payment.
+   *
+   * @param {{
+   *   name:          string,
+   *   address:       string,
+   *   city:          string,
+   *   state:         string,
+   *   zipCode:       string,
+   *   phone:         string,
+   *   accountNumber: string,
+   *   verifyAccount: string,
+   *   amount:        string,
+   *   fromIndex?:    number   // 0-based index of the From Account dropdown (default: 0)
+   * }} payeeData
+   */
   async sendPayment(payeeData) {
-    // TODO: Implement send payment action
     const {
       name,
       address,
