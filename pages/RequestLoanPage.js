@@ -32,7 +32,7 @@ class RequestLoanPage {
   }
 
   async goto() {
-    await this.page.goto('/requestloan.htm');
+    await this.page.goto('/parabank/requestloan.htm');
 
     // Wait until the loan form is ready
     await this.loanAmount.waitFor({ state: 'visible' });

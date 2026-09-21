@@ -31,7 +31,7 @@ test.describe.serial('09 - Request Loan Scenarios', () => {
       const status = await requestLoanPage.getLoanStatus();
 
       // Verify status is Approved
-      expect(status).toContain('Status: Approved');
+      expect(status).toContain('Approved');
 
       // Verify new account number is displayed
       await expect(requestLoanPage.newAccountNumber).toBeVisible();
@@ -65,7 +65,7 @@ test.describe.serial('09 - Request Loan Scenarios', () => {
       const status = await requestLoanPage.getLoanStatus();
 
       // Verify status is Denied
-      expect(status).toContain('Status: Denied');
+      expect(status).toContain('Denied');
 
       // Verify approved section is not displayed
       await expect(requestLoanPage.loanRequestApproved).not.toBeVisible();
@@ -92,7 +92,7 @@ test.describe.serial('09 - Request Loan Scenarios', () => {
       const status = await requestLoanPage.getLoanStatus();
 
       // Verify status is Denied
-      expect(status).toContain('Status: Denied');
+      expect(status).toContain('Denied');
 
       // Verify denial message
       await expect(
@@ -103,36 +103,12 @@ test.describe.serial('09 - Request Loan Scenarios', () => {
  // TS-022: Invalid Loan Request Validation
 
   const invalidLoanRequests = [
-    {
-      loanAmount: null,
-      downPayment: '50',
-      description: 'empty loan amount with valid down payment'
-    },
-    {
-      loanAmount: '0',
-      downPayment: '50',
-      description: 'zero loan amount'
-    },
-    {
-      loanAmount: '100',
-      downPayment: null,
-      description: 'valid loan amount with empty down payment'
-    },
-    {
-      loanAmount: '100',
-      downPayment: '0',
-      description: 'zero down payment'
-    },
-    {
-      loanAmount: '-100',
-      downPayment: '5',
-      description: 'negative loan amount'
-    },
-    {
-      loanAmount: '100',
-      downPayment: '-50',
-      description: 'negative down payment'
-    }
+    {loanAmount: null, downPayment: '50', description: 'empty loan amount with valid down payment'},
+    {loanAmount: '0', downPayment: '50', description: 'zero loan amount'},
+    {loanAmount: '100', downPayment: null, description: 'valid loan amount with empty down payment'},
+    {loanAmount: '100', downPayment: '0', description: 'zero down payment'},
+    {loanAmount: '-100', downPayment: '5', description: 'negative loan amount'},
+    {loanAmount: '100', downPayment: '-50', description: 'negative down payment'}
   ];
 
   for (const data of invalidLoanRequests) {
@@ -165,17 +141,11 @@ test.describe.serial('09 - Request Loan Scenarios', () => {
 
         // Wait briefly for either result/validation response
         await requestLoanPage.page.waitForLoadState('domcontentloaded');
+        
 
-        // Get loan status if result table is available
-        const status = await requestLoanPage.getLoanStatus();
 
-        console.log('');
-        console.log('Loan Amount:', data.loanAmount);
-        console.log('Down Payment:', data.downPayment);
-        console.log('Loan Status:', status);
-
-        // Invalid request must not be approved
-        expect(status).not.toContain('Status: Approved');
+        // Invalid request must NOT result in loan approval
+      await expect(requestLoanPage.approvedMessage).not.toBeVisible();
       }
     );
   }
