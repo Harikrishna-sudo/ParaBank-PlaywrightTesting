@@ -17,6 +17,11 @@ class RequestLoanPage {
     this.resultSection = page.locator('div#requestLoanResult');
     this.resultHeading = page.locator('#requestLoanResult h1.title');
 
+    // Error page
+    this.errorHeading = page.locator("#requestLoanError h1");
+
+    this.errorMessage = page.getByText('An internal error has occurred and has been logged.');
+
     // Approved result
     this.loanRequestApproved = page.locator('div#loanRequestApproved');
     this.approvedMessage = page.locator('#loanRequestApproved > p:first-child');

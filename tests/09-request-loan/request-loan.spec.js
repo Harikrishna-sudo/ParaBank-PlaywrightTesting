@@ -1,6 +1,6 @@
 const { test, expect } = require('../../fixtures/test-fixtures');
 
-test.describe.serial('09 - Request Loan Scenarios', () => {
+test.describe('09 - Request Loan Scenarios', () => {
 
   // Navigate to Request Loan before every test
   test.beforeEach(async ({ requestLoanPage }) => {
@@ -100,54 +100,141 @@ test.describe.serial('09 - Request Loan Scenarios', () => {
     }
   );
 
- // TS-022: Invalid Loan Request Validation
+ // =========================================================
+// TS-022: Invalid Loan Request Validation
+// =========================================================
 
-  const invalidLoanRequests = [
-    {loanAmount: null, downPayment: '50', description: 'empty loan amount with valid down payment'},
-    {loanAmount: '0', downPayment: '50', description: 'zero loan amount'},
-    {loanAmount: '100', downPayment: null, description: 'valid loan amount with empty down payment'},
-    {loanAmount: '100', downPayment: '0', description: 'zero down payment'},
-    {loanAmount: '-100', downPayment: '5', description: 'negative loan amount'},
-    {loanAmount: '100', downPayment: '-50', description: 'negative down payment'}
-  ];
+const invalidLoanRequests = [
+  {
+    loanAmount: null,
+    downPayment: '50',
+    description: 'empty loan amount with valid down payment'
+  },
+  {
+    loanAmount: '0',
+    downPayment: '50',
+    description: 'zero loan amount'
+  },
+  {
+    loanAmount: '100',
+    downPayment: null,
+    description: 'valid loan amount with empty down payment'
+  },
+  {
+    loanAmount: '100',
+    downPayment: '0',
+    description: 'zero down payment'
+  },
+  {
+    loanAmount: '-100',
+    downPayment: '5',
+    description: 'negative loan amount'
+  },
+  {
+    loanAmount: '100',
+    downPayment: '-50',
+    description: 'negative down payment'
+  }
+];
 
-  for (const data of invalidLoanRequests) {
+for (const data of invalidLoanRequests) {
 
-    test(
-      `TS-022: Verify invalid loan request - ${data.description}`,
-      async ({ requestLoanPage }) => {
+  test(
+    `TS-022: Verify invalid loan request - ${data.description}`,
+    async ({ requestLoanPage }) => {
 
-        // Fill loan amount only when value is provided
-        if (data.loanAmount !== null) {
-          await requestLoanPage.loanAmount.fill(
-            data.loanAmount
-          );
-        }
+      // Fill loan amount if provided
+      if (data.loanAmount !== null) {
+        await requestLoanPage.loanAmount.fill(
+          data.loanAmount
+        );
+      }
 
-        // Fill down payment only when value is provided
-        if (data.downPayment !== null) {
-          await requestLoanPage.downPayment.fill(
-            data.downPayment
-          );
-        }
+      // Fill down payment if provided
+      if (data.downPayment !== null) {
+        await requestLoanPage.downPayment.fill(
+          data.downPayment
+        );
+      }
 
-        // Select first available account
-        await requestLoanPage.fromAccount.selectOption({
-          index: 0
+      // Select first available account
+      await requestLoanPage.fromAccount.selectOption({
+        index: 0
+      });
+
+      // Submit loan request
+      await requestLoanPage.applyNowButton.click();
+
+
+      // =====================================================
+      // Wait for Error page
+      // =====================================================
+
+      try {
+
+        await requestLoanPage.errorHeading.waitFor({
+          state: 'visible',
+          timeout: 3000
         });
 
-        // Submit loan request
-        await requestLoanPage.applyNowButton.click();
+      } catch (error) {
 
-        // Wait briefly for either result/validation response
-        await requestLoanPage.page.waitForLoadState('domcontentloaded');
-        
-
-
-        // Invalid request must NOT result in loan approval
-      await expect(requestLoanPage.approvedMessage).not.toBeVisible();
+        // Error page did not appear within 3 seconds.
+        // Continue and check for normal loan result.
       }
-    );
-  }
 
+
+      // =====================================================
+      // CONDITION 1: ERROR PAGE
+      // =====================================================
+
+      if (await requestLoanPage.errorHeading.isVisible()) {
+
+        // Verify Error heading
+        await expect(
+          requestLoanPage.errorHeading
+        ).toHaveText('Error!');
+
+        // Verify Error message
+        await expect(
+          requestLoanPage.errorMessage
+        ).toHaveText(
+          'An internal error has occurred and has been logged.'
+        );
+
+        // Stop this test case here
+        return;
+      }
+
+
+      // =====================================================
+      // CONDITION 2: NORMAL LOAN RESULT
+      // =====================================================
+
+      await expect(
+        requestLoanPage.resultHeading
+      ).toBeVisible();
+
+      await expect(
+        requestLoanPage.resultHeading
+      ).toHaveText(
+        'Loan Request Processed'
+      );
+
+      // Wait for actual loan status
+      await expect(
+        requestLoanPage.loanStatus
+      ).toBeVisible();
+
+      const status =
+        await requestLoanPage.getLoanStatus();
+
+
+      // Invalid request must NOT be approved
+      expect(
+        status.trim()
+      ).not.toBe('Approved');
+    }
+  );
+}
 });
