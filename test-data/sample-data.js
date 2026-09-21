@@ -56,8 +56,8 @@ const testData = {
   // Request Loan Module
   loan: {
     validLoan: {
-      amount: '1000',
-      downPayment: '100',
+      amount: '100',
+      downPayment: '10',
     },
     deniedLoan: {
       amount: '500000',
