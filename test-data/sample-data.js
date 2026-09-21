@@ -1,28 +1,30 @@
 /**
  * Centralized test data templates and sample fixtures.
- * Assignees can add module-specific datasets here or create dedicated data files.
  *
- * Rule: Never store real secrets/passwords here. Use .env instead.
+ * Rule:
+ * Never store real secrets/passwords here.
+ * Use .env instead.
  */
 
 const testData = {
-  // Login Module
+
   login: {
     validUser: {
       username: process.env.USERNAME || 'john',
       password: process.env.PASSWORD || 'demo',
     },
+
     invalidUser: {
       username: 'nonexistent_user',
       password: 'wrongpassword',
     },
+
     emptyUser: {
       username: '',
       password: '',
     },
   },
 
-  // Registration Module
   registration: {
     sampleUser: {
       firstName: 'Jane',
@@ -38,7 +40,6 @@ const testData = {
     },
   },
 
-  // Bill Payment Module
   billPay: {
     samplePayee: {
       name: 'Electric Company',
@@ -53,15 +54,30 @@ const testData = {
     },
   },
 
-  // Request Loan Module
   loan: {
     validLoan: {
       amount: '1000',
       downPayment: '100',
     },
+
     deniedLoan: {
       amount: '500000',
       downPayment: '10',
+    },
+  },
+
+  // Module 10 - Update Contact Info
+  updateContactInfo: {
+    validProfile: {
+      address: '123 New Street',
+      city: 'Bangalore',
+      phone: '9876543210',
+    },
+
+    persistenceProfile: {
+      address: 'PLAYWRIGHT_PERSISTENCE_456',
+      city: 'PLAYWRIGHT_CITY_CHENNAI',
+      phone: '9123456780',
     },
   },
 };

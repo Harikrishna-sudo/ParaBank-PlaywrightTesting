@@ -1,37 +1,49 @@
-const { test: setup } = require('@playwright/test');
+require('dotenv').config({
+  path: require('path').resolve(__dirname, '../../.env'),
+  override: true
+});
+
+const { test: setup, expect } = require('@playwright/test');
 const path = require('path');
 
 /** Path where the authenticated browser state is saved */
 const AUTH_FILE = path.join(__dirname, '../../playwright/.auth/user.json');
 
 /**
- * Authentication Setup — runs ONCE before all authenticated test modules (05–11).
+ * Authentication Setup
  *
- * Steps:
- *   1. Navigate to the ParaBank login page
- *   2. Fill in credentials from environment variables (USERNAME / PASSWORD)
- *   3. Assert the login succeeded (Accounts Overview visible)
- *   4. Save the full browser storage state (cookies + localStorage) to
- *      playwright/.auth/user.json so all authenticated projects can reuse it
- *
- * This file is intentionally NOT a regular spec — it uses setup() not test().
- * It is wired as a Playwright "setup" project in playwright.config.js and
- * runs automatically before the authenticated project group.
+ * Logs into ParaBank once and saves the authenticated
+ * browser state for the authenticated test project.
  */
 setup('authenticate as valid user', async ({ page }) => {
-  // TODO: Implement login using LoginPage or direct page interactions
-  // 1. Navigate to login page
-  // await page.goto('index.htm');
 
-  // 2. Fill credentials from environment
-  // await page.locator('...usernameInput...').fill(process.env.USERNAME);
-  // await page.locator('...passwordInput...').fill(process.env.PASSWORD);
-  // await page.locator('...loginButton...').click();
+  // Navigate to ParaBank
+  await page.goto('/parabank');
 
-  // 3. Assert login succeeded
-  // await page.waitForURL('**/overview.htm');
-  // await expect(page.locator('...')).toBeVisible();
+  // Verify environment variables are loaded correctly
+  expect(process.env.USERNAME).toBe('john');
+  expect(process.env.PASSWORD).toBe('demo');
 
-  // 4. Save authenticated browser state to disk
-  await page.context().storageState({ path: AUTH_FILE });
+  // Fill username
+  await page.locator('input[name="username"]').fill(
+      process.env.USERNAME
+  );
+
+  // Fill password
+  await page.locator('input[name="password"]').fill(
+      process.env.PASSWORD
+  );
+
+  // Click Log In
+  await page.locator('input[value="Log In"]').click();
+
+  // Verify login succeeded
+  await expect(
+      page.getByRole('heading', { name: 'Accounts Overview' })
+  ).toBeVisible();
+
+  // Save authenticated browser state
+  await page.context().storageState({
+    path: AUTH_FILE
+  });
 });
