@@ -65,7 +65,7 @@ test.describe.serial('06 - Transfer Funds Scenarios', () => {
     const fieldErrorVisible   = await transferFundsPage.errorAmount.isVisible();
     const errorPageVisible    = await transferFundsPage.errorHeading.isVisible();
     expect(
-      successVisible || fieldErrorVisible || errorPageVisible,
+      successVisible || fieldErrorVisible ,
       'Expected the app to respond to a negative amount with either a confirmation or an error'
     ).toBe(true);
   });
