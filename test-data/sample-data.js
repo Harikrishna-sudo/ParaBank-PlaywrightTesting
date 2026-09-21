@@ -50,6 +50,7 @@ const testData = {
       accountNumber: '12345',
       verifyAccount: '12345',
       amount: '50.00',
+      fromIndex: 0,
     },
   },
 

@@ -21,13 +21,18 @@ class BillPayPage {
 
     // ── Success result locators ──────────────────────────────────────────────
     this.successHeading = page.locator('#billpayResult h1.title');
-    this.successResult  = page.locator('#billpayResult p');
+    this.successResult  = page.locator('#billpayResult p').first();
 
     // ── Validation error locators ────────────────────────────────────────────
-    this.errorName    = page.locator('#validationModel-name');
-    this.errorAddress = page.locator('#validationModel-address');
-    this.errorCity    = page.locator('#validationModel-city');
-    this.errorAmount  = page.locator('#validationModel-amount');
+    this.errorName          = page.locator('#validationModel-name');
+    this.errorAddress       = page.locator('#validationModel-address');
+    this.errorCity          = page.locator('#validationModel-city');
+    this.errorState         = page.locator('#validationModel-state');
+    this.errorZipCode       = page.locator('#validationModel-zipCode');
+    this.errorPhone         = page.locator('#validationModel-phoneNumber');
+    this.errorAccount       = page.locator('#validationModel-account-empty');
+    this.errorVerifyAccount = page.locator('#validationModel-verifyAccount-empty');
+    this.errorAmount        = page.locator('#validationModel-amount-empty');
   }
 
   async goto() {

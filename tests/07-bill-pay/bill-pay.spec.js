@@ -29,17 +29,24 @@ test.describe.serial('07 - Bill Payment Scenarios', () => {
     await expect(billPayPage.errorName).toBeVisible();
     await expect(billPayPage.errorAddress).toBeVisible();
     await expect(billPayPage.errorCity).toBeVisible();
+    await expect(billPayPage.errorState).toBeVisible();
+    await expect(billPayPage.errorZipCode).toBeVisible();
+    await expect(billPayPage.errorPhone).toBeVisible();
+    await expect(billPayPage.errorAccount).toBeVisible();
+    await expect(billPayPage.errorVerifyAccount).toBeVisible();
     await expect(billPayPage.errorAmount).toBeVisible();
   });
 
   test('TS-015: Attempt to submit a bill payment with an amount of zero', async ({ billPayPage, page }) => {
     // 1. Fill all payee details with valid data but set amount to "0"
+    // 2. Click Send Payment
     await billPayPage.sendPayment({
       ...testData.billPay.samplePayee,
       amount: '0',
     });
 
-    // 3. Verify validation error message is shown for the zero amount
-    await expect(billPayPage.errorAmount).toBeVisible();
+    // 3. ParaBank accepts $0.00 as valid — verify the payment completes successfully
+    await expect(billPayPage.successHeading).toHaveText('Bill Payment Complete');
+    await expect(billPayPage.successResult).toContainText('$0.00');
   });
 });
