@@ -103,12 +103,36 @@ test.describe.serial('09 - Request Loan Scenarios', () => {
  // TS-022: Invalid Loan Request Validation
 
   const invalidLoanRequests = [
-    {loanAmount: null, downPayment: '50'},
-    {loanAmount: '0', downPayment: '50'},
-    {loanAmount: '100', downPayment: null},
-    {loanAmount: '100', downPayment: '0'},
-    {loanAmount: '-100', downPayment: '5'},
-    {loanAmount: '100', downPayment: '-50'}
+    {
+      loanAmount: null,
+      downPayment: '50',
+      description: 'empty loan amount with valid down payment'
+    },
+    {
+      loanAmount: '0',
+      downPayment: '50',
+      description: 'zero loan amount'
+    },
+    {
+      loanAmount: '100',
+      downPayment: null,
+      description: 'valid loan amount with empty down payment'
+    },
+    {
+      loanAmount: '100',
+      downPayment: '0',
+      description: 'zero down payment'
+    },
+    {
+      loanAmount: '-100',
+      downPayment: '5',
+      description: 'negative loan amount'
+    },
+    {
+      loanAmount: '100',
+      downPayment: '-50',
+      description: 'negative down payment'
+    }
   ];
 
   for (const data of invalidLoanRequests) {
@@ -119,16 +143,22 @@ test.describe.serial('09 - Request Loan Scenarios', () => {
 
         // Fill loan amount only when value is provided
         if (data.loanAmount !== null) {
-          await requestLoanPage.loanAmount.fill(data.loanAmount);
+          await requestLoanPage.loanAmount.fill(
+            data.loanAmount
+          );
         }
 
         // Fill down payment only when value is provided
         if (data.downPayment !== null) {
-          await requestLoanPage.downPayment.fill(data.downPayment);
+          await requestLoanPage.downPayment.fill(
+            data.downPayment
+          );
         }
 
         // Select first available account
-        await requestLoanPage.fromAccount.selectOption({index: 0});
+        await requestLoanPage.fromAccount.selectOption({
+          index: 0
+        });
 
         // Submit loan request
         await requestLoanPage.applyNowButton.click();
@@ -139,11 +169,15 @@ test.describe.serial('09 - Request Loan Scenarios', () => {
         // Get loan status if result table is available
         const status = await requestLoanPage.getLoanStatus();
 
+        console.log('');
+        console.log('Loan Amount:', data.loanAmount);
+        console.log('Down Payment:', data.downPayment);
+        console.log('Loan Status:', status);
+
         // Invalid request must not be approved
         expect(status).not.toContain('Status: Approved');
       }
     );
   }
-
 
 });
