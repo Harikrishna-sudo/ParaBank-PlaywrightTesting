@@ -1,10 +1,11 @@
+const BASE_URL = process.env.BASE_URL || 'https://parabank-17m8.onrender.com/parabank';
 
   class LoginPage {
     /**
      * @param {import('@playwright/test').Page} page
      */
     constructor(page) {
-      this.page = page;
+      this.page          = page;
       this.usernameInput = page.locator("[name='username']");
       this.passwordInput = page.locator("[name='password']");
       this.loginButton   = page.locator("input[value='Log In']");
@@ -12,34 +13,43 @@
     }
 
     async goto() {
-      await this.page.goto('https://parabank.parasoft.com/parabank/index.htm');
+      await this.page.goto(`${BASE_URL}/index.htm`);
+    }
+
+    async enterUsername(username) {
+      await this.usernameInput.fill(username);
+    }
+
+    async enterPassword(password) {
+      await this.passwordInput.fill(password);
+    }
+
+    async clickLoginButton() {
+      await Promise.all([
+        this.page.waitForNavigation({ waitUntil: 'networkidle' }),
+        this.loginButton.click()
+      ]);
     }
 
     async login(username, password) {
-      await this.usernameInput.fill(username);
-      await this.passwordInput.fill(password);
-      await this.page.waitForNavigation
-        ? await Promise.all([
-            this.page.waitForNavigation(),
-            this.loginButton.click()
-          ])
-        : await this.loginButton.click();
+      await this.enterUsername(username);
+      await this.enterPassword(password);
+      await this.clickLoginButton();
     }
 
     async isErrorDisplayed() {
       try {
-        await this.errorMessage.waitFor({ timeout: 5000 });
-        return await this.errorMessage.isVisible();
+        await this.errorMessage.waitFor({ state: 'visible', timeout: 5000 });
+        return true;
       } catch {
         return false;
       }
     }
 
     async getErrorMessage() {
-      await this.errorMessage.waitFor({ timeout: 5000 });
+      await this.errorMessage.waitFor({ state: 'visible', timeout: 5000 });
       return (await this.errorMessage.textContent()).trim();
     }
   }
 
   module.exports = { LoginPage };
-
